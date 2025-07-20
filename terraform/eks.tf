@@ -1,10 +1,13 @@
+data "aws_caller_identity" "current" {
+    # This data source is used to get the current AWS account ID
+}
 module "eks" {
-
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.15.1"
+  version = "~> 20.31"
 
-  cluster_name                   = local.name
+  cluster_name                   = local.cluster_name
   cluster_endpoint_public_access = true
+  
 
   cluster_addons = {
     coredns = {
@@ -22,42 +25,74 @@ module "eks" {
   subnet_ids               = module.vpc.public_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-  # EKS Managed Node Group(s)
+  # eks managed node groups
 
   eks_managed_node_group_defaults = {
 
-    instance_types = ["t2.large"]
-
+    instance_types = ["t3.medium", "t3a.medium", "t2.medium"]
     attach_cluster_primary_security_group = true
-
+    
   }
 
 
   eks_managed_node_groups = {
 
-    tws-demo-ng = {
+    cluster-ng = {
       min_size     = 2
       max_size     = 3
       desired_size = 2
 
-      instance_types = ["t2.large"]
+      instance_types = ["t3.medium", "t3a.medium", "t2.medium"]
       capacity_type  = "SPOT"
 
-      disk_size = 35 
-      use_custom_launch_template = false  # Important to apply disk size!
+      disk_size                  = 30
+      use_custom_launch_template                 = false  # Important to apply disk size!
+
+  
+
 
       tags = {
-        Name = "tws-demo-ng"
-        Environment = "dev"
+        Name = "cluster-ng"
+        Environment = "prod"
         ExtraTag = "e-commerce-app"
       }
     }
+  }  
+     
+    # Allow your IAM user access to EKS via aws-auth
+  enable_cluster_creator_admin_permissions = true
+  
+  access_entries = {
+    admin-user = {
+      principal_arn = data.aws_caller_identity.current.arn
+      type = "STANDARD"
+
+      policy_associations = {
+        cluster-admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+
+          access_scope = {
+          type       = "cluster"
+          namespaces = []
+        }
+        }
+      }
+    }
+    
   }
- 
+   
   tags = local.tags
 
-
 }
+
+
+# resource "aws_eks_access_entry" "eks_shop_cluster" {
+#   cluster_name      = module.eks.cluster_name
+#   principal_arn     = data.aws_caller_identity.current.arn
+#   kubernetes_groups = ["system:masters"]
+#   type              = "STANDARD"
+# }
 
 data "aws_instances" "eks_nodes" {
   instance_tags = {
@@ -71,3 +106,4 @@ data "aws_instances" "eks_nodes" {
 
   depends_on = [module.eks]
 }
+

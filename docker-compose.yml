@@ -1,55 +1,61 @@
-version: '3.8'
-
 services:
+
   mongodb:
     image: mongo:latest
-    container_name: easyshop-mongodb
-    ports:
-      - "27017:27017"
+    container_name: mongodb
     volumes:
       - mongodb_data:/data/db
+    ports: 
+      - "27017:27017"
+    networks: 
+      - easy_app
+    restart: always
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD","mongosh", "--eval", "db.adminCommand('ping')"] 
+      interval: 30s
+      timeout: 10s
       retries: 5
       start_period: 30s
-    networks:
-      - easyshop-network
-
+      
   migration:
     build:
       context: .
       dockerfile: scripts/Dockerfile.migration
-    container_name: easyshop-migration
+    container_name: migration
     env_file:
-      - .env.local
+      - .env
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
-      - easyshop-network
+      - easy_app
 
-  app:
+  easy_shop:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: easyshop
+    container_name: easy_shop
     ports:
       - "3000:3000"
+    networks:
+      - easy_app
     env_file:
-      - .env.local
+      - .env
     depends_on:
       migration:
         condition: service_completed_successfully
-    networks:
-      - easyshop-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
 networks:
-  easyshop-network:
-    name: easyshop-network
-
+  easy_app:
+    name: easy_app
+ 
 volumes:
   mongodb_data:
     name: mongodb_data
