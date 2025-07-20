@@ -3,9 +3,10 @@ pipeline {
     agent any
     environment{
         DOCKERHUB_USERNAME = "sourabhlodhi"
-        DOCKER_IMAGE_NAME = "sourabhlodhi/easyshop-app"
-        DOCKER_MIGRATION_IMAGE_NAME = "sourabhlodhi/easyhop-migration"
+        DOCKER_IMAGE_NAME = "easyshop-app"
+        DOCKER_MIGRATION_IMAGE_NAME = "easyshop-migration"
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKER_IMAGE_TAG = "latest"
         GIT_BRANCH = "production"
         GIT_URL = "https://github.com/Sourabh9125/tws-e-commerce-app.git"
      }
@@ -29,27 +30,26 @@ pipeline {
         stage("Build Docker Image") {
             parallel{
                 stage("Build Docker Image easyshop") {
-            steps {
-                script {
-                    docker_build(
-                        imageName: env.DOCKER_IMAGE_NAME,
-                        imageTag: env.DOCKER_IMAGE_TAG,
-                        context: ".",
-                        dockerfile: "Dockerfile"
+                  steps {
+                     script {
+                         docker_build(
+                              imageName: env.DOCKER_IMAGE_NAME,
+                              imageTag: env.DOCKER_IMAGE_TAG,
+                              context: ".",
+                              dockerfile: "Dockerfile"
                         )
                 }
                 
             }
         }
                 stage("Build Docker Image migration") {
-            steps {
-                script {
-                    docker_build(
-                        imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
-                        imageTag: env.DOCKER_IMAGE_TAG,
-                        context: ".",
-                        dockerfile: "scripts/Dockerfile.migration"
-                        
+                   steps {
+                      script {
+                           docker_build(
+                                imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
+                                imageTag: env.DOCKER_IMAGE_TAG,
+                                context: ".",
+                                dockerfile: "scripts/Dockerfile.migration"
                         )
                 }
                 
@@ -66,33 +66,32 @@ pipeline {
             }
         }
         stage("Push TO DockerHub") {
-             parallel{
-         stage("easyshop Image") {
-            steps {
-                script {
-                   docker_hub(
-                       credentialsId: "dockerHubId",
-                       imageName: env.DOCKER_IMAGE_NAME,
-                       imageTag: env.DOCKER_IMAGE_TAG
-                       )
-                }
-                
+            parallel {
+                stage("DockerHub easyshop Image") {
+                    steps {
+                        script {
+                            docker_hub(
+                                credentialsId: "dockerHubId",
+                                imageName: env.DOCKER_IMAGE_NAME,
+                                imageTag: env.DOCKER_IMAGE_TAG
+                            )
+                       }
+                 }
             }
-        }
-         stage("migration Image") {
-            steps {
-                script {
+         stage("DockerHub migration Image") {
+             steps {
+                 script {
                      docker_hub(
-                       credentialsId: "dockerHubId",
-                       imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
-                       imageTag: env.DOCKER_IMAGE_TAG
-                       )
-                }
-                
-            }
-        }
+                         credentialsId: "dockerHubId",
+                         imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
+                         imageTag: env.DOCKER_IMAGE_TAG
+                     )
+                 }
              }
          }
+     }
+}
+
         stage("update kubernetes Manifests") {
             steps {
                 script {
