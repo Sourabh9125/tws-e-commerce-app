@@ -6,7 +6,6 @@ pipeline {
         DOCKER_IMAGE_NAME = "easyshop-app"
         DOCKER_MIGRATION_IMAGE_NAME = "easyshop-migration"
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
-        DOCKER_IMAGE_TAG = "latest"
         GIT_BRANCH = "production"
         GIT_URL = "https://github.com/Sourabh9125/tws-e-commerce-app.git"
      }
