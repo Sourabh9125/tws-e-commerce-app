@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_USERNAME = "sourabhlodhi"
         DOCKER_IMAGE_NAME = "easyshop-app"
         DOCKER_MIGRATION_IMAGE_NAME = "easyshop-migration"
-        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKER_IMAGE_TAG = "V${BUILD_NUMBER}"
         GIT_BRANCH = "production"
         GIT_URL = "https://github.com/Sourabh9125/tws-e-commerce-app.git"
      }
@@ -35,7 +35,8 @@ pipeline {
                               imageName: env.DOCKER_IMAGE_NAME,
                               imageTag: env.DOCKER_IMAGE_TAG,
                               context: ".",
-                              dockerfile: "Dockerfile"
+                              dockerfile: "Dockerfile",
+                              dockerHubUser: env.DOCKERHUB_USERNAME
                         )
                 }
                 
