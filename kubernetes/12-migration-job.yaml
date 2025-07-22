@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: migration
-        image: sourabhlodhi/easyshop-migration:V15
+        image: sourabhlodhi/easyshop-migration:V16
         imagePullPolicy: Always
         env:
         - name: MONGODB_URI
