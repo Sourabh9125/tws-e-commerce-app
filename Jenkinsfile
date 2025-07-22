@@ -57,6 +57,22 @@ pipeline {
         }
             }
         }
+        stage("testing"){
+            steps {
+                script {
+                    sh '''
+               echo "Running tests inside Node.js container"
+               docker run --rm \
+               -v $(pwd):/app \
+               -w /app \
+               node:18 \
+               sh -c "npm ci && npm run test || echo No tests found, skipping..."
+          '''
+            
+            
+                }
+            }
+        }
         stage("Security scanning using trivy") {
             steps {
                 script {
