@@ -109,4 +109,14 @@ pipeline {
             }
         }
     }
+    post{
+     failure{
+         script{
+             emailext from: "lodhisaurabh9125@gmail.com",
+             to: "lodhisourabh4678@gmail.com",
+             body: "pipeline failure check immeidatly",
+             subject: "pipeline status"
+         }
+     }
+ }   
 }
