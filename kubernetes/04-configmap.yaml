@@ -6,7 +6,7 @@ metadata:
 data:
   MONGODB_URI: "mongodb://mongodb-service:27017/easyshop"
   NODE_ENV: "production"
-  NEXT_PUBLIC_API_URL: "https://easyshop.letsdeployit.com/api"
-  NEXTAUTH_URL: "https://easyshop.letsdeployit.com/"
-  NEXTAUTH_SECRET: "HmaFjYZ2jbUK7Ef+wZrBiJei4ZNGBAJ5IdiOGAyQegw="
-  JWT_SECRET: "e5e425764a34a2117ec2028bd53d6f1388e7b90aeae9fa7735f2469ea3a6cc8c"
+  NEXT_PUBLIC_API_URL: "https://easyshop.deployit.shop/api"
+  NEXTAUTH_URL: "https://easyshop.deployit.shop/"
+  NEXTAUTH_SECRET: "5DC6mjsx4h5h9XvANgjAr2Qfgtsy+byk9DlDOE6SyaiXI/FdeeDCD0SQe8o="
+  JWT_SECRET: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NTIzMTg3NzcsImV4cCI6MTc4Mzg1NDc3NywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.g10mtzpsT2cYZ-ebW4LJDaFPS95r67w97GSAtqJyq0M"
