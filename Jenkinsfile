@@ -108,7 +108,7 @@ pipeline {
      }
 }
 
-        stage("update kubernetes Manifests") {
+        stage("update kubernetes Manifests ") {
             steps {
                 script {
                     update_k8s_manifest(
